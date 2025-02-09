@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000, #c3cfe2);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .payment-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .form-group button:active {
+            transform: translateY(1px);
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <h2>Payment Information</h2>
+    <form id="paymentForm">
+        <div class="form-group">
+            <label for="cardName">
+                <img src="https://img.icons8.com/ios-filled/50/000000/user.png" alt="User Icon" class="icon">
+                Cardholder's Name
+            </label>
+            <input type="text" id="cardName" name="cardName" required>
+            <div class="error" id="cardNameError"></div>
+        </div>
+        <div class="form-group">
+            <label for="cardNumber">
+                <img src="https://img.icons8.com/ios-filled/50/000000/bank-card-back-side.png" alt="Card Icon" class="icon">
+                Card Number
+            </label>
+            <input type="text" id="cardNumber" name="cardNumber" required>
+            <div class="error" id="cardNumberError"></div>
+        </div>
+        <div class="form-group">
+            <label for="expiryDate">
+                <img src="https://img.icons8.com/ios-filled/50/000000/calendar.png" alt="Calendar Icon" class="icon">
+                Expiry Date
+            </label>
+            <input type="month" id="expiryDate" name="expiryDate" required>
+            <div class="error" id="expiryDateError"></div>
+        </div>
+        <div class="form-group">
+            <label for="cvv">
+                <img src="https://img.icons8.com/ios-filled/50/000000/lock.png" alt="Lock Icon" class="icon">
+                CVV
+            </label>
+            <input type="text" id="cvv" name="cvv" required>
+            <div class="error" id="cvvError"></div>
+        </div>
+        <div class="form-group">
+            <label for="paymentMethod">
+                <img src="https://img.icons8.com/ios-filled/50/000000/credit-card.png" alt="Payment Method Icon" class="icon">
+                Payment Method
+            </label>
+            <select id="paymentMethod" name="paymentMethod">
+                <option value="creditCard">Credit Card</option>
+                <option value="debitCard">Debit Card</option>
+                <option value="netBanking">Net Banking</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit">Pay Now</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Clear previous errors
+        clearErrors();
+
+        // Get form values
+        const cardName = document.getElementById('cardName').value;
+        const cardNumber = document.getElementById('cardNumber').value;
+        const expiryDate = document.getElementById('expiryDate').value;
+        const cvv = document.getElementById('cvv').value;
+
+        let valid = true;
+
+        // Validate Cardholder's Name
+        if (cardName.trim() === "") {
+            showError('cardNameError', 'Cardholder\'s name is required.');
+            valid = false;
+        }
+
+        // Validate Card Number (simple check)
+        const cardNumberRegex = /^\d{16}$/;
+        if (!cardNumberRegex.test(cardNumber)) {
+            showError('cardNumberError', 'Card number must be 16 digits.');
+            valid = false;
+        }
+
+        // Validate CVV (simple check)
+        const cvvRegex = /^\d{3}$/;
+        if (!cvvRegex.test(cvv)) {
+            showError('cvvError', 'CVV must be 3 digits.');
+            valid = false;
+        }
+
+        if (valid) {
+            // If valid, proceed with payment
+            alert('Payment processed successfully!');
+            // Add your payment processing logic here
+        }
+    });
+
+    function showError(elementId, message) {
+        document.getElementById(elementId).innerText = message;
+    }
+
+    function clearErrors() {
+        document.getElementById('cardNameError').innerText = '';
+        document.getElementById('cardNumberError').innerText = '';
+        document.getElementById('expiryDateError').innerText = '';
+        document.getElementById('cvvError').innerText = '';
+    }
+</script>
+
+</body>
+</html>
